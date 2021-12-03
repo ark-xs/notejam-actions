@@ -1,0 +1,65 @@
+pipeline {
+    environment { 
+        registry = "arkdocr/jenkins" 
+        registryCredential = 'docker'
+        dockerImage = '' 
+	PROJECT_ID = 'project-k8-326109'
+        CLUSTER_NAME = 'cluster-1'
+        LOCATION = 'asia-northeast1-a'
+        CREDENTIALS_ID = 'project-k8-326109'
+	
+        }
+    agent any
+    stages {
+        stage('SonarCloud Scanning') {
+            environment {
+                SCANNER_HOME = tool 'SonarQubeScanner'
+                SONAR_TOKEN = credentials('SonarCloudOne')
+                ORGANIZATION = "abd-xon"
+                PROJECT_NAME = "abd-xon_notejam-jenkins"
+            }
+            steps {
+                withSonarQubeEnv(installationName: 'SonarCloudOne', credentialsId: 'SonarCloudOne') {
+                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=$ORGANIZATION \
+                    -Dsonar.java.binaries=build/classes/java/ \
+                    -Dsonar.projectKey=$PROJECT_NAME \
+                    -Dsonar.sources=.'''
+                }
+            }
+        }
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+        stage('Building Docker Image') { 
+            steps { 
+                script { 
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER" 
+                }
+            } 
+        }
+        stage('Push to Dockerhub') { 
+            steps { 
+                script { 
+                    docker.withRegistry( '', registryCredential ) { 
+                    dockerImage.push("latest")
+		    dockerImage.push("$BUILD_NUMBER") 
+                    }
+                } 
+            }
+        }
+	stage('Deploy to GKE-mysql') {
+            steps{
+                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'notejam-kube/mysql-deploy.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+            }
+        }  
+	stage('Deploy to GKE-notejam') {
+            steps{
+                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'notejam-kube/notejam-deploy.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+            }
+        }
+    }
+}

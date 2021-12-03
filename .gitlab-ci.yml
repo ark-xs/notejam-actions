@@ -1,0 +1,39 @@
+stages:
+  - Build
+  - Push
+  - Deploy
+  
+build-docker:
+  stage: Build
+  tags:
+   - notejam
+  script:
+    - docker build -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
+    - docker tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" "$CI_REGISTRY_IMAGE:latest"
+    #- docker tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" "dr.neuralcompany.team/testing/abdur-notejam:latest"
+  # only:
+  #   variables:
+  #     - ($CI_COMMIT_BRANCH == "main")
+
+push-docker:
+  stage: Push
+  tags:
+    - notejam
+  before_script:
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    #- docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+    - docker push "$CI_REGISTRY_IMAGE:latest"
+    #- docker push "dr.neuralcompany.team/testing/abdur-notejam:latest"
+
+
+deploy-k8s:
+  stage: Deploy
+  tags:
+    - notejam
+  script:
+    - kubectl apply -f notejam-kube/mysql-deploy.yaml --kubeconfig=$kube_config
+    - kubectl apply -f notejam-kube/notejam-deploy.yaml --kubeconfig=$kube_config
+
+
+
