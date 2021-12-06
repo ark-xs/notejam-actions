@@ -37,10 +37,11 @@ jobs:
   
   
   deploy-to-GKE:
+    needs: push-docker-image
     runs-on: label-1
     steps:
       - name: deploy to GKE
-        run: kubectl apply -f ./notejam-kube/mysql-deploy.yaml --kubeconfig=${{ secrets.KUBE_CONFIG }}
+        run: kubectl apply -f notejam-kube/mysql-deploy.yaml --kubeconfig=${{ secrets.KUBE_CONFIG }}
   
   
   
