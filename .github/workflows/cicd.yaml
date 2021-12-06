@@ -8,14 +8,19 @@ on:
 
 jobs:
   checkout-build-docker:
-    runs-on: 
+    runs-on: self-hosted
       steps:
+        - uses: actions/checkout@v2
+        - name: Build the docker Image
+          run: docker build -t arkdocr/jenkins:github .
+          run: docker tag -t arkdocr/jenkins:github arkdocr/jenkins:latest
+        
       
-  push-docker-image:
+  #push-docker-image:
   
   
   
-  deploy-to-GKE:
+  #deploy-to-GKE:
   
   
   
