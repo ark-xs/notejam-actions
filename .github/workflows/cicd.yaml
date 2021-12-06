@@ -36,10 +36,11 @@ jobs:
         run: docker push arkdocr/jenkins:latest
   
   
-  deploy-to-GKE:
+  Deploy-to-GKE:
     needs: push-docker-image
     runs-on: notejam
     steps:
+    # Setup gcloud CLI
     - uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
       with:
         service_account_key: ${{ secrets.GKE_SA_KEY }}
@@ -59,8 +60,10 @@ jobs:
         #IMAGE: static-site
 
 
-    - name: deploy to GKE
+    - name: deploy the mysql container
       run: kubectl apply -f notejam-kube/mysql-deploy.yaml 
+    - name: Deploy the notejam container
+      run: kubectl apply -f notejam-kube/notejam-deploy.yaml
 
   
   
