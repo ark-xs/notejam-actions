@@ -1,0 +1,21 @@
+name: github cicd for notejam
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  checkout-build-docker:
+    runs-on: 
+      steps:
+      
+  push-docker-image:
+  
+  
+  
+  deploy-to-GKE:
+  
+  
+  
