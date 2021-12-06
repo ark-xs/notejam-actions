@@ -8,12 +8,12 @@ on:
 
 jobs:
   checkout-SCM:
-    runs-on: self-hosted
+    runs-on: label-1
     steps:
     - uses: actions/checkout@v2
   build-docker:
     needs: checkout-SCM
-    runs-on: self-hosted
+    runs-on: label-1
     steps:
         #name: Build the docker Image
       - run: docker build -t arkdocr/jenkins:$(date +%s) .
