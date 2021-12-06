@@ -27,17 +27,20 @@ jobs:
     runs-on: label-1
     steps:
       - name: Login to dockerhub
-        run: docker login -u "$CI_REGISTRY_USER" -p "${{ secrets.CI_REGISTRY_PASSWORD }}" $CI_REGISTRY
-        env: 
-          CI_REGISTRY_USER: arkdocr
-         # CI_REGISTRY_PASSWORD: arkdocr007
-          CI_REGISTRY: docker.io      
+        run: docker login -u "${{ secrets.CI_REGISTRY_USER }}" -p "${{ secrets.CI_REGISTRY_PASSWORD }}" ${{ secrets.CI_REGISTRY }}
+        # env: 
+         # CI_REGISTRY_USER: arkdocr
+         # CI_REGISTRY_PASSWORD: 
+         # CI_REGISTRY: docker.io      
       - name: Push the Image to Dockerhub
         run: docker push arkdocr/jenkins:latest
   
   
-  
-  #deploy-to-GKE:
+  deploy-to-GKE:
+    runs-on: label-1
+    steps:
+      - name: deploy to GKE
+        run: kubectl apply -f ./notejam-kube/mysql-deploy.yaml --kubeconfig=${{ secrets.KUBE_CONFIG }}
   
   
   
