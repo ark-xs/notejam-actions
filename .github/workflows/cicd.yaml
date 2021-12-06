@@ -43,6 +43,7 @@ jobs:
         PROJECT_ID: project-k8-326109
         GKE_CLUSTER: cluster-1    
         GKE_ZONE: asia-south2-b 
+        credentials: ${{ secrets.GKE_SA_KEY }}
     steps:
     # Setup gcloud CLI
 #     - uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
@@ -50,11 +51,11 @@ jobs:
 #         service_account_key: ${{ secrets.GKE_SA_KEY }}
 #         project_id: ${{ env.PROJECT_ID }}
      # Get the GKE credentials so we can deploy to the cluster
-    - uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
-      with:
-        cluster_name: ${{ env.GKE_CLUSTER }}
-        location: ${{ env.GKE_ZONE }}
-        credentials: ${{ secrets.GKE_SA_KEY }}
+#     - uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
+#       with:
+#         cluster_name: ${{ env.GKE_CLUSTER }}
+#         location: ${{ env.GKE_ZONE }}
+#         credentials: ${{ secrets.GKE_SA_KEY }}
 
     - name: deploy the mysql container
       run: kubectl apply -f notejam-kube/mysql-deploy.yaml 
