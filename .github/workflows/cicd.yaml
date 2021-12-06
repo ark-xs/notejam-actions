@@ -7,11 +7,11 @@ on:
     branches: [ master ]
 
 jobs:
-  checkout-SCM:
-    runs-on: label-1
-    steps:
-    - name: checkout SCM
-      uses: actions/checkout@v2
+#   checkout-SCM:
+#     runs-on: label-1
+#     steps:
+#     - name: checkout SCM
+#       uses: actions/checkout@v2
 #   build-docker:
 #     needs: checkout-SCM
 #     runs-on: label-1
@@ -36,15 +36,8 @@ jobs:
 #         run: docker push arkdocr/jenkins:latest
   
   
-  Deploy-to-GKE:
-    #needs: push-docker-image
-    runs-on: notejam
-    env:
-        PROJECT_ID: project-k8-326109
-        GKE_CLUSTER: cluster-1    
-        GKE_ZONE: asia-south2-b 
-        credentials: ${{ secrets.GKE_SA_KEY }}
-    steps:
+  
+  
     # Setup gcloud CLI
 #     - uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
 #       with:
@@ -57,6 +50,18 @@ jobs:
 #         location: ${{ env.GKE_ZONE }}
 #         credentials: ${{ secrets.GKE_SA_KEY }}
 
+
+
+  
+  Deploy-to-GKE:
+    #needs: push-docker-image
+    runs-on: notejam
+    env:
+        PROJECT_ID: project-k8-326109
+        GKE_CLUSTER: cluster-1    
+        GKE_ZONE: asia-south2-b 
+        credentials: ${{ secrets.GKE_SA_KEY }}
+    steps:
     - name: deploy the mysql container
       run: kubectl apply -f notejam-kube/mysql-deploy.yaml 
     - name: Deploy the notejam container
