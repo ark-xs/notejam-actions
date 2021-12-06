@@ -10,10 +10,10 @@ jobs:
   checkout-build-docker:
     runs-on: self-hosted
       steps:
-        - uses: actions/checkout@v2
-        - name: Build the docker Image
-          run: docker build -t arkdocr/jenkins:github .
-          run: docker tag -t arkdocr/jenkins:github arkdocr/jenkins:latest
+      - uses: actions/checkout@v2
+      - name: Build the docker Image
+        run: docker build -t arkdocr/jenkins:github .
+        run: docker tag -t arkdocr/jenkins:github arkdocr/jenkins:latest
         
       
   #push-docker-image:
