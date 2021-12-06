@@ -17,7 +17,7 @@ jobs:
     steps:
         #name: Build the docker Image
       - run: docker build -t notejam:$(date +%s) .
-      - run: docker tag -t  notejam:$(date +%s) arkdocr/jenkins:latest
+      - run: docker tag notejam:$(date +%s) arkdocr/jenkins:latest
         
       
   #push-docker-image:
