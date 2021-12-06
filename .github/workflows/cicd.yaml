@@ -12,32 +12,32 @@ jobs:
     steps:
     - name: checkout SCM
       uses: actions/checkout@v2
-  build-docker:
-    needs: checkout-SCM
-    runs-on: label-1
-    steps:
-      - name: Build the docker Image
-        run: docker build -t notejam:master .
-      - name: Tag the Image
-        run: docker tag notejam:master arkdocr/jenkins:latest
+#   build-docker:
+#     needs: checkout-SCM
+#     runs-on: label-1
+#     steps:
+#       - name: Build the docker Image
+#         run: docker build -t notejam:master .
+#       - name: Tag the Image
+#         run: docker tag notejam:master arkdocr/jenkins:latest
         
       
-  push-docker-image:
-    needs: build-docker
-    runs-on: label-1
-    steps:
-      - name: Login to dockerhub
-        run: docker login -u "${{ secrets.CI_REGISTRY_USER }}" -p "${{ secrets.CI_REGISTRY_PASSWORD }}" ${{ secrets.CI_REGISTRY }}
-        # env: 
-         # CI_REGISTRY_USER: arkdocr
-         # CI_REGISTRY_PASSWORD: 
-         # CI_REGISTRY: docker.io      
-      - name: Push the Image to Dockerhub
-        run: docker push arkdocr/jenkins:latest
+#   push-docker-image:
+#     needs: build-docker
+#     runs-on: label-1
+#     steps:
+#       - name: Login to dockerhub
+#         run: docker login -u "${{ secrets.CI_REGISTRY_USER }}" -p "${{ secrets.CI_REGISTRY_PASSWORD }}" ${{ secrets.CI_REGISTRY }}
+#         # env: 
+#          # CI_REGISTRY_USER: arkdocr
+#          # CI_REGISTRY_PASSWORD: 
+#          # CI_REGISTRY: docker.io      
+#       - name: Push the Image to Dockerhub
+#         run: docker push arkdocr/jenkins:latest
   
   
   Deploy-to-GKE:
-    needs: push-docker-image
+    #needs: push-docker-image
     runs-on: notejam
     env:
         PROJECT_ID: project-k8-326109
