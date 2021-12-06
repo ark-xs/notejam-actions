@@ -22,7 +22,18 @@ jobs:
         run: docker tag notejam:master arkdocr/jenkins:latest
         
       
-  #push-docker-image:
+  push-docker-image:
+    needs: build-docker
+    runs-on: label-1
+    steps:
+      - name: Login to dockerhub
+        run: docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        env: 
+          CI_REGISTRY_USER: arkdocr
+          CI_REGISTRY_PASSWORD: arkdocr007
+          CI_REGISTRY: docker.io      
+      - name: Push the Image to Dockerhub
+        run: docker push arkdocr/jenkins:latest
   
   
   
