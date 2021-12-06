@@ -15,8 +15,8 @@ jobs:
     needs: checkout-SCM
     runs-on: self-hosted
     steps:
-      #- name: Build the docker Image
-      - run: docker build -t arkdocr/jenkins:github .
+      - name: Build the docker Image
+      - run: docker build -t arkdocr/jenkins:$(date +%s) .
      # - run: docker tag -t arkdocr/jenkins:github arkdocr/jenkins:latest
         
       
