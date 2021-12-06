@@ -10,14 +10,16 @@ jobs:
   checkout-SCM:
     runs-on: label-1
     steps:
-    - uses: actions/checkout@v2
+    - name: checkout SCM
+      uses: actions/checkout@v2
   build-docker:
     needs: checkout-SCM
     runs-on: label-1
     steps:
-        #name: Build the docker Image
-      - run: docker build -t notejam:$(date +%s) .
-      - run: docker tag notejam:$(date +%s) arkdocr/jenkins:latest
+      - name: Build the docker Image
+        run: docker build -t notejam:$(date +%s) .
+      - name: Tag the Image
+        run: docker tag notejam:$(date +%s) arkdocr/jenkins:latest
         
       
   #push-docker-image:
