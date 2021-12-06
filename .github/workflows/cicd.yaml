@@ -38,15 +38,29 @@ jobs:
   
   deploy-to-GKE:
     needs: push-docker-image
-    runs-on: label-1
+    runs-on: notejam
     steps:
-      - uses: actions/checkout@v2
-      - name: Decrypt the kube-cofig secret
-        run: ./.github/scripts/decrypt_secret.sh
-        env: 
-          DECRYPTED_SECRET: ${{ secrets.KUBE_CONFIG }}
-      - name: deploy to GKE
-        run: kubectl apply -f notejam-kube/mysql-deploy.yaml --kubeconfig=$DECRYTED_SECRET
+    - uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
+      with:
+        service_account_key: ${{ secrets.GKE_SA_KEY }}
+        project_id: ${{ secrets.GKE_PROJECT }}
+     # Get the GKE credentials so we can deploy to the cluster
+    - uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        location: ${{ env.GKE_ZONE }}
+        credentials: ${{ secrets.GKE_SA_KEY }}
+        
+      env:
+        PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+        GKE_CLUSTER: cluster-1    # Add your cluster name here.
+        GKE_ZONE: asia-south2-b   # Add your cluster zone here.
+        #DEPLOYMENT_NAME: gke-test # Add your deployment name here.
+        #IMAGE: static-site
+
+
+    - name: deploy to GKE
+      run: kubectl apply -f notejam-kube/mysql-deploy.yaml 
 
   
   
