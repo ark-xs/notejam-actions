@@ -40,8 +40,14 @@ jobs:
     needs: push-docker-image
     runs-on: label-1
     steps:
+      - uses: actions/checkout@v2
+      - name: Decrypt the kube-cofig secret
+        run: ./.github/scripts/decrypt_secret.sh
+        env: 
+          DECRYPTED_SECRET: ${{ secrets.KUBE_CONFIG }}
       - name: deploy to GKE
-        run: kubectl apply -f notejam-kube/mysql-deploy.yaml --kubeconfig='${{ secrets.KUBE_CONFIG }}'
+        run: kubectl apply -f notejam-kube/mysql-deploy.yaml --kubeconfig=$DECRYTED_SECRET
+
   
   
   
