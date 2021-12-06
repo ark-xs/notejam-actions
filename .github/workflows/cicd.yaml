@@ -27,10 +27,10 @@ jobs:
     runs-on: label-1
     steps:
       - name: Login to dockerhub
-        run: docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        run: docker login -u "$CI_REGISTRY_USER" -p "secrets.CI_REGISTRY_PASSWORD" $CI_REGISTRY
         env: 
           CI_REGISTRY_USER: arkdocr
-          CI_REGISTRY_PASSWORD: arkdocr007
+         # CI_REGISTRY_PASSWORD: arkdocr007
           CI_REGISTRY: docker.io      
       - name: Push the Image to Dockerhub
         run: docker push arkdocr/jenkins:latest
