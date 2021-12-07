@@ -9,31 +9,31 @@ on:
 jobs:
 
 
-  checkout-SCM:
-    runs-on: label-1
-    steps:
-    - name: checkout SCM
-      uses: actions/checkout@v2
+#   checkout-SCM:
+#     runs-on: label-1
+#     steps:
+#     - name: checkout SCM
+#       uses: actions/checkout@v2
       
       
-  build-docker:
-    needs: checkout-SCM
-    runs-on: label-1
-    steps:
-      - name: Build the docker Image
-        run: docker build -t notejam:master .
-      - name: Tag the Dcker Image
-        run: docker tag notejam:master arkdocr/jenkins:latest
+#   build-docker:
+#     needs: checkout-SCM
+#     runs-on: label-1
+#     steps:
+#       - name: Build the docker Image
+#         run: docker build -t notejam:master .
+#       - name: Tag the Dcker Image
+#         run: docker tag notejam:master arkdocr/jenkins:latest
         
       
-  push-docker-image:
-    needs: build-docker
-    runs-on: label-1
-    steps:
-      - name: Login to Dockerhub
-        run: docker login -u "${{ secrets.CI_REGISTRY_USER }}" -p "${{ secrets.CI_REGISTRY_PASSWORD }}" ${{ secrets.CI_REGISTRY }}   
-      - name: Push the Image to Dockerhub
-        run: docker push arkdocr/jenkins:latest
+#   push-docker-image:
+#     needs: build-docker
+#     runs-on: label-1
+#     steps:
+#       - name: Login to Dockerhub
+#         run: docker login -u "${{ secrets.CI_REGISTRY_USER }}" -p "${{ secrets.CI_REGISTRY_PASSWORD }}" ${{ secrets.CI_REGISTRY }}   
+#       - name: Push the Image to Dockerhub
+#         run: docker push arkdocr/jenkins:latest
 #         env: 
 #           CI_REGISTRY_USER: arkdocr
 #           CI_REGISTRY_PASSWORD: 
@@ -41,7 +41,7 @@ jobs:
 
   
   Deploy-to-GKE:
-    needs: push-docker-image
+    #needs: push-docker-image
     runs-on: GKE-runner
     env:
         PROJECT_ID: project-k8-326109
@@ -50,24 +50,25 @@ jobs:
         credentials: ${{ secrets.GKE_SA_KEY }}
     
     steps:
-#     - uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
-#       with:
-#         cluster_name: ${{ env.GKE_CLUSTER }}
-#         location: ${{ env.GKE_ZONE }}
-#         credentials: ${{ secrets.GKE_SA_KEY }}
     - name: Deploy the mysql container
       run: kubectl apply -f /notejam-kube/mysql-deploy.yaml 
     - name: Deploy the notejam container
       run: kubectl apply -f /notejam-kube/notejam-deploy.yaml
       
       
-      
+     # Get the GKE credentials so we can deploy to the cluster      
+#     - uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
+#       with:
+#         cluster_name: ${{ env.GKE_CLUSTER }}
+#         location: ${{ env.GKE_ZONE }}
+#         credentials: ${{ secrets.GKE_SA_KEY }}
+
 #     Setup gcloud CLI
 #     - uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
 #       with:
 #         service_account_key: ${{ secrets.GKE_SA_KEY }}
 #         project_id: ${{ env.PROJECT_ID }}
-     # Get the GKE credentials so we can deploy to the cluster
+
 
 
   
