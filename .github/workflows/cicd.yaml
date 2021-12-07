@@ -51,9 +51,9 @@ jobs:
     
     steps:
     - name: Deploy the mysql container
-      run: kubectl apply -f notejam-kube/mysql-deploy.yaml 
+      run: kubectl apply -f ./notejam-kube/mysql-deploy.yaml 
     - name: Deploy the notejam container
-      run: kubectl apply -f notejam-kube/notejam-deploy.yaml
+      run: kubectl apply -f ./notejam-kube/notejam-deploy.yaml
       
       
      # Get the GKE credentials so we can deploy to the cluster      
