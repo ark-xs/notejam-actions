@@ -9,11 +9,11 @@ on:
 jobs:
 
 
-#   checkout-SCM:
-#     runs-on: label-1
-#     steps:
-#     - name: checkout SCM
-#       uses: actions/checkout@v2
+  checkout-SCM:
+    runs-on: GKE-runner
+    steps:
+    - name: checkout SCM
+      uses: actions/checkout@v2
       
       
 #   build-docker:
