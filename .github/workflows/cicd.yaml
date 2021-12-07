@@ -50,15 +50,15 @@ jobs:
         credentials: ${{ secrets.GKE_SA_KEY }}
     
     steps:
-    - uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
-      with:
-        cluster_name: ${{ env.GKE_CLUSTER }}
-        location: ${{ env.GKE_ZONE }}
-        credentials: ${{ secrets.GKE_SA_KEY }}
+#     - uses: google-github-actions/get-gke-credentials@fb08709ba27618c31c09e014e1d8364b02e5042e
+#       with:
+#         cluster_name: ${{ env.GKE_CLUSTER }}
+#         location: ${{ env.GKE_ZONE }}
+#         credentials: ${{ secrets.GKE_SA_KEY }}
     - name: Deploy the mysql container
-      run: kubectl apply -f notejam-kube/mysql-deploy.yaml 
+      run: kubectl apply -f /notejam-kube/mysql-deploy.yaml 
     - name: Deploy the notejam container
-      run: kubectl apply -f notejam-kube/notejam-deploy.yaml
+      run: kubectl apply -f /notejam-kube/notejam-deploy.yaml
       
       
       
